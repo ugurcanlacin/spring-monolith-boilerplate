@@ -3,10 +3,10 @@ package com.monolith.boilerplate.controller;
 import com.monolith.boilerplate.exception.BadRequestException;
 import com.monolith.boilerplate.model.AuthProvider;
 import com.monolith.boilerplate.model.User;
-import com.monolith.boilerplate.payload.ApiResponse;
-import com.monolith.boilerplate.payload.AuthResponse;
-import com.monolith.boilerplate.payload.LoginRequest;
-import com.monolith.boilerplate.payload.SignUpRequest;
+import com.monolith.boilerplate.payload.ApiResponseDTO;
+import com.monolith.boilerplate.payload.AuthorizationDTO;
+import com.monolith.boilerplate.payload.LoginDTO;
+import com.monolith.boilerplate.payload.SignUpDTO;
 import com.monolith.boilerplate.repository.UserRepository;
 import com.monolith.boilerplate.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,33 +42,34 @@ public class AuthController {
     private TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
+                        loginDTO.getEmail(),
+                        loginDTO.getPassword()
                 )
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.createToken(authentication);
-        return ResponseEntity.ok(new AuthResponse(token));
+        AuthorizationDTO authorizationDTO = new AuthorizationDTO().builder().accessToken(token).build();
+        return ResponseEntity.ok(authorizationDTO);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDTO signUpDTO) {
+        if(userRepository.existsByEmail(signUpDTO.getEmail())) {
             throw new BadRequestException("Email address already in use.");
         }
 
         // Creating user's account
         User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
-        user.setProvider(AuthProvider.local);
+        user.setName(signUpDTO.getName());
+        user.setEmail(signUpDTO.getEmail());
+        user.setPassword(signUpDTO.getPassword());
+        user.setProvider(AuthProvider.app);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -79,7 +80,7 @@ public class AuthController {
                 .buildAndExpand(result.getId()).toUri();
 
         return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "User registered successfully@"));
+                .body(new ApiResponseDTO(true, "User registered successfully@"));
     }
 
 }

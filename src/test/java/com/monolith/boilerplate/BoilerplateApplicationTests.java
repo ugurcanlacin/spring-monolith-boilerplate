@@ -21,9 +21,9 @@ class BoilerplateApplicationTests {
 		Assert.assertNotNull(appProperties.getAuth());
 		Assert.assertNotNull(appProperties.getAuth().getTokenSecret());
 		Assert.assertNotNull(appProperties.getAuth().getTokenExpirationMsec());
-		Assert.assertNotNull(appProperties.getOauth2());
-		Assert.assertNotNull(appProperties.getOauth2().getAuthorizedRedirectUris());
-		Assert.assertNotEquals(0, appProperties.getOauth2().getAuthorizedRedirectUris().size());
+		Assert.assertNotNull(appProperties.getOAuth2());
+		Assert.assertNotNull(appProperties.getOAuth2().getAuthorizedRedirectUris());
+		Assert.assertNotEquals(0, appProperties.getOAuth2().getAuthorizedRedirectUris().size());
 	}
 
 }
