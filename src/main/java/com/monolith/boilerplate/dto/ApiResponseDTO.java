@@ -1,4 +1,4 @@
-package com.monolith.boilerplate.payload;
+package com.monolith.boilerplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.monolith.boilerplate.payload;
+package com.monolith.boilerplate.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,10 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDTO {
+public class SignUpDTO {
+    @NotBlank
+    private String name;
+
     @NotBlank
     @Email
     private String email;
