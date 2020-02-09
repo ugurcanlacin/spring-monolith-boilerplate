@@ -9,6 +9,7 @@ import com.monolith.boilerplate.dto.LoginDTO;
 import com.monolith.boilerplate.dto.SignUpDTO;
 import com.monolith.boilerplate.repository.UserRepository;
 import com.monolith.boilerplate.security.TokenProvider;
+import com.monolith.boilerplate.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,7 +54,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = tokenProvider.create(authentication);
+        String token = tokenProvider.create((UserPrincipal) authentication.getPrincipal());
         AuthorizationDTO authorizationDTO = new AuthorizationDTO().builder().accessToken(token).build();
         return ResponseEntity.ok(authorizationDTO);
     }

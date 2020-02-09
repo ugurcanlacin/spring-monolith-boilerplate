@@ -40,6 +40,7 @@ app:
   auth:
     tokenSecret: 6C9A981CC29478E7F282AA65AE3DF
     tokenExpirationMsec: 864000000
+    issuer: spring-monolith-boilerplate
   oauth2:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect

@@ -3,10 +3,12 @@ package com.monolith.boilerplate.security.oauth2;
 import com.monolith.boilerplate.config.AppProperties;
 import com.monolith.boilerplate.exception.BadRequestException;
 import com.monolith.boilerplate.security.TokenProvider;
+import com.monolith.boilerplate.security.UserPrincipal;
 import com.monolith.boilerplate.util.CookieUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -62,8 +64,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-
-        String token = tokenProvider.create(authentication);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        String token = tokenProvider.create(userPrincipal);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)

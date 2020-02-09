@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -20,16 +21,21 @@ public class TokenProvider {
 
     private AppProperties appProperties;
     private Algorithm algorithm;
-    private JWTVerifier verifier;
+
+    private static final String ROLE_SEPARATOR = ";";
+    private static final String CLAIM_KEY_ROLE = "role";
+    private static final String CLAIM_KEY_SESSION_ID = "sid";
+    private static final String CLAIM_KEY_DEVICE_ID = "did";
+
+    private static final Long DEFAULT_JWT_LEEWAY = 60L;
 
     public TokenProvider(AppProperties appProperties) {
         this.appProperties = appProperties;
         this.algorithm = Algorithm.HMAC512(appProperties.getAuth().getTokenSecret());
-        this.verifier = JWT.require(algorithm).build();
     }
 
-    public String create(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    public String create(UserPrincipal userPrincipal) {
+        String roles = userPrincipal.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.joining(ROLE_SEPARATOR));
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
         String token = null;
@@ -37,6 +43,10 @@ public class TokenProvider {
             token = JWT.create().withSubject(userPrincipal.getId())
                     .withIssuedAt(now)
                     .withExpiresAt(expiryDate)
+                    .withIssuer(appProperties.getAuth().getIssuer())
+                    .withClaim(CLAIM_KEY_ROLE, roles)
+                    .withClaim(CLAIM_KEY_DEVICE_ID, "") // TODO Set device id
+                    .withClaim(CLAIM_KEY_SESSION_ID, "") // TODO Set session id
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             log.error("Claims couldn't be converted to JSON.");
@@ -56,6 +66,10 @@ public class TokenProvider {
 
     public boolean verify(String token) {
         try {
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer(appProperties.getAuth().getIssuer())
+                    .acceptLeeway(DEFAULT_JWT_LEEWAY)
+                    .build();
             verifier.verify(token);
             return true;
         } catch (JWTVerificationException exception){
