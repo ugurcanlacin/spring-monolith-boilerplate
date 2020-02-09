@@ -14,20 +14,20 @@ import java.util.Date;
 @Data
 public class BaseEntity {
     @Column(insertable = true, nullable = false, updatable = false)
-    private Date creationDate;
+    private Date createdAt;
     @Column(insertable = false, nullable = true, updatable = true)
-    private Date updateDate;
+    private Date updatedAt;
     @Column(insertable = true, nullable = true, updatable = true)
-    private Boolean deleted;
+    private Boolean isDeleted;
 
     @PrePersist
     protected void onCreate() {
-        deleted = false;
-        creationDate = new Date();
+        isDeleted = false;
+        createdAt = new Date();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updateDate = new Date();
+        updatedAt = new Date();
     }
 }
