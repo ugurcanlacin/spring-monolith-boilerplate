@@ -1,7 +1,10 @@
 package com.monolith.boilerplate.security;
 
 import com.monolith.boilerplate.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails {
     private String id;
     private String email;
