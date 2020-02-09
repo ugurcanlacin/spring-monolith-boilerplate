@@ -34,7 +34,7 @@ public class TokenProvider {
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
         String token = null;
         try {
-            token = JWT.create().withSubject(Long.toString(userPrincipal.getId()))
+            token = JWT.create().withSubject(userPrincipal.getId())
                     .withIssuedAt(now)
                     .withExpiresAt(expiryDate)
                     .sign(algorithm);
@@ -44,14 +44,14 @@ public class TokenProvider {
         return token;
     }
 
-    public Long getUserId(String token) {
+    public String getUserId(String token) {
         DecodedJWT jwt = null;
         try {
             jwt = JWT.decode(token);
         } catch (JWTDecodeException exception){
             log.error("Invalid token.");
         }
-        return Long.parseLong(jwt.getSubject());
+        return jwt.getSubject();
     }
 
     public boolean verify(String token) {
