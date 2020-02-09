@@ -8,17 +8,15 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.monolith.boilerplate.config.AppProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Service
+@Slf4j
 public class TokenProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
     private AppProperties appProperties;
     private Algorithm algorithm;
@@ -41,7 +39,7 @@ public class TokenProvider {
                     .withExpiresAt(expiryDate)
                     .sign(algorithm);
         } catch (JWTCreationException exception){
-            logger.error("Claims couldn't be converted to JSON.");
+            log.error("Claims couldn't be converted to JSON.");
         }
         return token;
     }
@@ -51,7 +49,7 @@ public class TokenProvider {
         try {
             jwt = JWT.decode(token);
         } catch (JWTDecodeException exception){
-            logger.error("Invalid token.");
+            log.error("Invalid token.");
         }
         return Long.parseLong(jwt.getSubject());
     }
@@ -61,7 +59,7 @@ public class TokenProvider {
             verifier.verify(token);
             return true;
         } catch (JWTVerificationException exception){
-            logger.error("Invalid signature or claims.");
+            log.error("Invalid signature or claims.");
         }
         return false;
     }

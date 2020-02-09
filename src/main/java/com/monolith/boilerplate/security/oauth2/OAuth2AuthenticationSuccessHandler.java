@@ -4,6 +4,7 @@ import com.monolith.boilerplate.config.AppProperties;
 import com.monolith.boilerplate.exception.BadRequestException;
 import com.monolith.boilerplate.security.TokenProvider;
 import com.monolith.boilerplate.util.CookieUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static com.monolith.boilerplate.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private TokenProvider tokenProvider;
@@ -43,7 +45,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
-            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 
