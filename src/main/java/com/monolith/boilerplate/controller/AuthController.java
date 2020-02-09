@@ -53,7 +53,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = tokenProvider.createToken(authentication);
+        String token = tokenProvider.create(authentication);
         AuthorizationDTO authorizationDTO = new AuthorizationDTO().builder().accessToken(token).build();
         return ResponseEntity.ok(authorizationDTO);
     }

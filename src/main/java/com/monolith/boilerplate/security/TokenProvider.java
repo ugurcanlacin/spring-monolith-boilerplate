@@ -1,7 +1,13 @@
 package com.monolith.boilerplate.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.monolith.boilerplate.config.AppProperties;
-import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -15,48 +21,47 @@ public class TokenProvider {
     private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
     private AppProperties appProperties;
+    private Algorithm algorithm;
+    private JWTVerifier verifier;
 
     public TokenProvider(AppProperties appProperties) {
         this.appProperties = appProperties;
+        this.algorithm = Algorithm.HMAC512(appProperties.getAuth().getTokenSecret());
+        this.verifier = JWT.require(algorithm).build();
     }
 
-    public String createToken(Authentication authentication) {
+    public String create(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
-
-        return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
-                .compact();
-    }
-
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(appProperties.getAuth().getTokenSecret())
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Long.parseLong(claims.getSubject());
-    }
-
-    public boolean validateToken(String authToken) {
+        String token = null;
         try {
-            Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
+            token = JWT.create().withSubject(Long.toString(userPrincipal.getId()))
+                    .withIssuedAt(now)
+                    .withExpiresAt(expiryDate)
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            logger.error("Claims couldn't be converted to JSON.");
+        }
+        return token;
+    }
+
+    public Long getUserId(String token) {
+        DecodedJWT jwt = null;
+        try {
+            jwt = JWT.decode(token);
+        } catch (JWTDecodeException exception){
+            logger.error("Invalid token.");
+        }
+        return Long.parseLong(jwt.getSubject());
+    }
+
+    public boolean verify(String token) {
+        try {
+            verifier.verify(token);
             return true;
-        } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
-        } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            logger.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            logger.error("JWT claims string is empty.");
+        } catch (JWTVerificationException exception){
+            logger.error("Invalid signature or claims.");
         }
         return false;
     }
