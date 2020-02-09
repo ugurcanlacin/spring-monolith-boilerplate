@@ -71,7 +71,6 @@ public class AuthController {
         user.setEmail(signUpDTO.getEmail());
         user.setPassword(signUpDTO.getPassword());
         user.setProvider(AuthProvider.app);
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User result = userRepository.save(user);

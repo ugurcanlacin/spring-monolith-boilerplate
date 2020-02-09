@@ -1,18 +1,20 @@
 package com.monolith.boilerplate.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
+@Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
 @Data
-public class User {
+public class User extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -20,6 +22,9 @@ public class User {
 
     @Column(nullable = false)
     private String name;
+
+    @Column
+    private String surname;
 
     @Email
     @Column(nullable = false)
