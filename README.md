@@ -1,7 +1,5 @@
 # spring-monolith-boilerplate
 
-JDK 11
-
 ## Security
 - Facebook, Gmail Login
 - JWT Login
