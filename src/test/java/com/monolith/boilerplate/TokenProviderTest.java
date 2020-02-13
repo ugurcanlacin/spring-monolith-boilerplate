@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Collections;
 
-@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BoilerplateApplication.class)
 public class TokenProviderTest {
 

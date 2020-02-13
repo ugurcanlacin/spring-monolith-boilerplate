@@ -15,6 +15,9 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "email")
 })
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")

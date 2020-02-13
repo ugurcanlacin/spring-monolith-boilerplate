@@ -1,7 +1,7 @@
 package com.monolith.boilerplate.model;
 
 public enum  AuthProvider {
-    app,
-    facebook,
-    google
+    APP,
+    FACEBOOK,
+    GOOGLE
 }
