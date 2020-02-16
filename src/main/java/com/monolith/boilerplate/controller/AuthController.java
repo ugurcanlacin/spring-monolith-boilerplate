@@ -70,7 +70,7 @@ public class AuthController {
         user.setName(signUpDTO.getName());
         user.setEmail(signUpDTO.getEmail());
         user.setPassword(signUpDTO.getPassword());
-        user.setProvider(AuthProvider.APP);
+        user.setProvider(AuthProvider.app);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User result = userRepository.save(user);
