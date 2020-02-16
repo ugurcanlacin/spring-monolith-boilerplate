@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -28,5 +29,5 @@ public class Privilege implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
-    private Set<Role> roles;
+    private Set<Role> roles  = new HashSet();;
 }

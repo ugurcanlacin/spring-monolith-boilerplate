@@ -23,6 +23,9 @@ public class UserRepositoryTest {
     UserRepository userRepository;
 
     @Autowired
+    RoleRepository roleRepository;
+
+    @Autowired
     TestEntityManager tem;
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -74,4 +77,21 @@ public class UserRepositoryTest {
         assertEquals(1, roles.get(1).getPrivileges().size());
     }
 
+    @Test
+    public void removingUserShouldNotRemoveRoles(){
+        userRepository.deleteByEmail("test@email.com");
+        userRepository.flush();
+        assertEquals(2, roleRepository.count());
+    }
+
+    @Test
+    public void removingRoleShouldNotRemoveUser(){
+        roleRepository.deleteByName("ROLE2");// TODO: it doesn't remove now.
+        roleRepository.flush();
+    }
+
+    @Test
+    public void removedRoleShouldBeRemovedFromUserToo(){
+        // TODO
+    }
 }

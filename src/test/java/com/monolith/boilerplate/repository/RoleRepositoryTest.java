@@ -65,4 +65,11 @@ public class RoleRepositoryTest {
         assertEquals("WRITE_ORGANIZATION_A", privilegesSets.iterator().next().getName());
     }
 
+    @Test
+    public void removingRoleShouldNotRemovePrivileges(){
+        roleRepository.deleteByName("ROLE");
+        roleRepository.flush();
+        assertEquals(0, roleRepository.count());
+        assertEquals(2, privilegeRepository.count());
+    }
 }
