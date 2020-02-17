@@ -1,9 +1,6 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.AuthProvider;
-import com.monolith.boilerplate.model.Privilege;
-import com.monolith.boilerplate.model.Role;
-import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,9 @@ public class UserRepositoryTest {
     RoleRepository roleRepository;
 
     @Autowired
+    VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
     TestEntityManager tem;
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -43,6 +43,9 @@ public class UserRepositoryTest {
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
+        VerificationToken token = VerificationToken.builder().token("token").expiresAt(new Date()).build();
+        Set<VerificationToken> tokens = new HashSet<>();
+        tokens.add(token);
         User user = User.builder().email("test@email.com")
                 .emailVerified(true)
                 .name("name")
@@ -51,6 +54,7 @@ public class UserRepositoryTest {
                 .imageUrl("url")
                 .provider(AuthProvider.app)
                 .roles(roles)
+                .verificationTokens(tokens)
                 .build();
         userRepository.save(user);
     }
@@ -65,6 +69,8 @@ public class UserRepositoryTest {
         User user = userRepository.findByEmail("test@email.com");
         assertEquals("name", user.getName());
         assertEquals("url", user.getImageUrl());
+        assertNotNull(user.getVerificationTokens());
+        assertEquals(1, user.getVerificationTokens().size());
     }
 
     @Test
@@ -93,5 +99,13 @@ public class UserRepositoryTest {
     @Test
     public void removedRoleShouldBeRemovedFromUserToo(){
         // TODO
+    }
+
+    @Test
+    public void removedVerificationTokenShouldBeRemovedFromUserToo(){
+        // TODO
+//        VerificationToken token = verificationTokenRepository.findByToken("token");
+//        verificationTokenRepository.delete(token);
+//        assertNull(verificationTokenRepository.findByToken("token"));
     }
 }

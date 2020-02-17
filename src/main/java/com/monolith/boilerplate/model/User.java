@@ -8,7 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +25,7 @@ public class User extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(columnDefinition = "VARCHAR(50)")
     private String id;
 
     @Column(nullable = false)
@@ -53,5 +56,8 @@ public class User extends BaseEntity implements Serializable {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<Role> roles  = new HashSet();;
+    private Set<Role> roles  = new HashSet();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<VerificationToken> verificationTokens = new HashSet<>();
 }

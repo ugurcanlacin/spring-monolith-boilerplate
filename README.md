@@ -6,3 +6,5 @@
 - Password encrypt salt
 - User, Role, Privilege entities
 
+## Problems faced
+- Hibernate child delete issue. 

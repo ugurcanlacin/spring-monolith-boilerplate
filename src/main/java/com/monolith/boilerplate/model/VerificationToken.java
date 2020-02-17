@@ -1,6 +1,5 @@
 package com.monolith.boilerplate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,17 +8,15 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date;
 
 @Entity
-@Table(name = "PRIVILEGE")
+@Table(name = "VERIFICATION_TOKEN")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Privilege implements Serializable {
-
+@Builder
+public class VerificationToken implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -27,8 +24,14 @@ public class Privilege implements Serializable {
     private String id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String token;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Set<Role> roles  = new HashSet();;
+    @Column
+    private Date expiresAt;
+
+    @Column
+    private Boolean isVerified = false;
+
+    @ManyToOne
+    private User user;
 }

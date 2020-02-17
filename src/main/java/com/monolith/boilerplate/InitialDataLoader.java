@@ -1,9 +1,6 @@
 package com.monolith.boilerplate;
 
-import com.monolith.boilerplate.model.AuthProvider;
-import com.monolith.boilerplate.model.Privilege;
-import com.monolith.boilerplate.model.Role;
-import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.model.*;
 import com.monolith.boilerplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +9,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,6 +39,9 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
+        VerificationToken token = VerificationToken.builder().token("token").expiresAt(new Date()).build();
+        Set<VerificationToken> tokens = new HashSet<>();
+        tokens.add(token);
         User user = User.builder().email("test@email.com")
                 .emailVerified(true)
                 .name("name")
@@ -49,6 +50,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 .imageUrl("url")
                 .provider(AuthProvider.app)
                 .roles(roles)
+                .verificationTokens(tokens)
                 .build();
         userRepository.save(user);
         alreadySetup = true;

@@ -22,6 +22,7 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(columnDefinition = "VARCHAR(50)")
     private String id;
 
     @Column(nullable = false, unique = true)
@@ -34,5 +35,5 @@ public class Role implements Serializable {
     private Set<Privilege> privileges;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Set<User> users  = new HashSet();;
+    private Set<User> users  = new HashSet();
 }

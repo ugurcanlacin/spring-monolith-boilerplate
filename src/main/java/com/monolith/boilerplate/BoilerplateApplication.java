@@ -12,5 +12,7 @@ public class BoilerplateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BoilerplateApplication.class, args);
 	}
-
+	// TODO: Password Reset
+	// TODO: Verification Token implementation
+	// TODO: Change Date to LocalDateTime
 }
