@@ -9,6 +9,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
-        VerificationToken token = VerificationToken.builder().token("token").expiresAt(new Date()).build();
+        VerificationToken token = VerificationToken.builder().token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
         Set<VerificationToken> tokens = new HashSet<>();
         tokens.add(token);
         User user = User.builder().email("test@email.com")

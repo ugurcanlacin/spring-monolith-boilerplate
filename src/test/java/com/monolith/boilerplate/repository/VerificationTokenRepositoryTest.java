@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +23,7 @@ public class VerificationTokenRepositoryTest {
         VerificationToken token = VerificationToken.builder()
                 .isVerified(false)
                 .token("token")
-                .expiresAt(new Date())
+                .expiresAt(LocalDateTime.now().plusDays(1))
                 .build();
         verificationTokenRepository.save(token);
     }

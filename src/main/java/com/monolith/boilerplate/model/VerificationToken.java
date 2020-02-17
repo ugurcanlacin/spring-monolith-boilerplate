@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -27,7 +28,7 @@ public class VerificationToken implements Serializable {
     private String token;
 
     @Column
-    private Date expiresAt;
+    private LocalDateTime expiresAt;
 
     @Column
     private Boolean isVerified = false;

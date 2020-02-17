@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +44,7 @@ public class UserRepositoryTest {
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
-        VerificationToken token = VerificationToken.builder().token("token").expiresAt(new Date()).build();
+        VerificationToken token = VerificationToken.builder().token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
         Set<VerificationToken> tokens = new HashSet<>();
         tokens.add(token);
         User user = User.builder().email("test@email.com")
