@@ -12,7 +12,14 @@ public class BoilerplateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BoilerplateApplication.class, args);
 	}
+	// TODO: Email service
 	// TODO: Password Reset
-	// TODO: Verification Token implementation
-	// TODO: Change Date to LocalDateTime
+	// TODO: Verification Token service implementation
+	// TODO: LocalDateTime, locale setting.
+	// TODO: JpaRepository vs CrudRepository?
+
+	// TODO PROBLEMS
+	// TODO: - Child object is not being removed.
+	// TODO: - Fetching creates either infinitive loop or lazy initilatization error.
+	// TODO: - Buy Hibernate premium course.
 }
