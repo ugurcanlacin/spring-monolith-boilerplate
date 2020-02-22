@@ -1,6 +1,6 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.Privilege;
+import com.monolith.boilerplate.model.Permission;
 import com.monolith.boilerplate.model.Role;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.PersistenceException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,21 +23,21 @@ public class RoleRepositoryTest {
     @Autowired
     TestEntityManager tem;
     @Autowired
-    PrivilegeRepository privilegeRepository;
+    PermissionRepository permissionRepository;
 
     @BeforeEach
     private void saveTestRole() {
-        Set<Privilege> privileges = new HashSet<>();
-        privileges.add(Privilege.builder().name("WRITE_ORGANIZATION_A").build());
-        privileges.add(Privilege.builder().name("READ_ORGANIZATION_A").build());
-        Role role = Role.builder().name("ROLE").privileges(privileges).build();
+        Set<Permission> permissions = new HashSet<>();
+        permissions.add(Permission.builder().name("WRITE_ORGANIZATION_A").build());
+        permissions.add(Permission.builder().name("READ_ORGANIZATION_A").build());
+        Role role = Role.builder().name("ROLE").permissions(permissions).build();
         roleRepository.save(role);
     }
 
     @Test
     public void shouldFindRoleByName() {
         Role roleByName = roleRepository.findByName("ROLE");
-        Assertions.assertEquals(2, roleByName.getPrivileges().size());
+        Assertions.assertEquals(2, roleByName.getPermissions().size());
     }
 
     @Test
@@ -52,17 +51,17 @@ public class RoleRepositoryTest {
 
     @Test
     public void shouldBeAbleToSaveAnotherRoleWithSamePrivilege() {
-        Set<Privilege> privileges = new HashSet<>();
-        Privilege privilege = privilegeRepository.findByName("WRITE_ORGANIZATION_A");
-        privileges.add(privilege);
-        Role role = Role.builder().name("ROLE2").privileges(privileges).build();
+        Set<Permission> permissions = new HashSet<>();
+        Permission permission = permissionRepository.findByName("WRITE_ORGANIZATION_A");
+        permissions.add(permission);
+        Role role = Role.builder().name("ROLE2").permissions(permissions).build();
         roleRepository.save(role);
         Role role2 = roleRepository.findByName("ROLE2");
-        Set<Privilege> privilegesSets= role2.getPrivileges();
+        Set<Permission> permissionsSets= role2.getPermissions();
         assertNotNull(role2);
-        assertNotNull(privilegesSets);
-        assertEquals(1, privilegesSets.size());
-        assertEquals("WRITE_ORGANIZATION_A", privilegesSets.iterator().next().getName());
+        assertNotNull(permissionsSets);
+        assertEquals(1, permissionsSets.size());
+        assertEquals("WRITE_ORGANIZATION_A", permissionsSets.iterator().next().getName());
     }
 
     @Test
@@ -70,6 +69,6 @@ public class RoleRepositoryTest {
         roleRepository.deleteByName("ROLE");
         roleRepository.flush();
         assertEquals(0, roleRepository.count());
-        assertEquals(2, privilegeRepository.count());
+        assertEquals(2, permissionRepository.count());
     }
 }

@@ -4,5 +4,5 @@
 - Facebook, Gmail Login
 - JWT Login
 - Password encrypt salt
-- User, Role, Privilege entities
+- User, Role, Permission entities
 

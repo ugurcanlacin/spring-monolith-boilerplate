@@ -1,7 +1,5 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.Privilege;
-import com.monolith.boilerplate.model.Role;
 import com.monolith.boilerplate.model.VerificationToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 public class VerificationTokenRepositoryTest {

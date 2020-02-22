@@ -8,7 +8,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -17,7 +16,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role implements Serializable {
+public class Role extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -29,11 +28,9 @@ public class Role implements Serializable {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "roles_privileges",
+    @JoinTable(name = "roles_permissions",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
-    private Set<Privilege> privileges;
+            inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
+    private Set<Permission> permissions;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private Set<User> users  = new HashSet();
 }

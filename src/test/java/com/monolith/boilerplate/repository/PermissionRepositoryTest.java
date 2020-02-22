@@ -1,6 +1,6 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.Privilege;
+import com.monolith.boilerplate.model.Permission;
 import com.monolith.boilerplate.model.Role;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,33 +14,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class PrivilegeRepositoryTest {
+public class PermissionRepositoryTest {
     @Autowired
     TestEntityManager tem;
     @Autowired
-    PrivilegeRepository privilegeRepository;
+    PermissionRepository permissionRepository;
 
     @Autowired
     RoleRepository roleRepository;
 
     @BeforeEach
     private void saveTestPrivilege() {
-        Privilege p1 = Privilege.builder().name("WRITE_ORGANIZATION_A").build();
-        Privilege p2 = Privilege.builder().name("READ_ORGANIZATION_A").build();
-        HashSet<Privilege> privileges = new HashSet<>();
-        privileges.add(p1);
-        privileges.add(p2);
-        Role role = Role.builder().name("ROLE").privileges(privileges).build();
+        Permission p1 = Permission.builder().name("WRITE_ORGANIZATION_A").build();
+        Permission p2 = Permission.builder().name("READ_ORGANIZATION_A").build();
+        HashSet<Permission> permissions = new HashSet<>();
+        permissions.add(p1);
+        permissions.add(p2);
+        Role role = Role.builder().name("ROLE").permissions(permissions).build();
         roleRepository.save(role);
     }
 
     @Test
     public void shouldThrowConstraintViolationExceptionIfNewEntityHasDuplicateName() {
         PersistenceException exception = assertThrows(PersistenceException.class, () -> {
-            privilegeRepository.save(Privilege.builder().name("WRITE_ORGANIZATION_A").build());
+            permissionRepository.save(Permission.builder().name("WRITE_ORGANIZATION_A").build());
             tem.flush();
         });
         assertTrue(exception.getCause() instanceof ConstraintViolationException);
@@ -48,6 +47,5 @@ public class PrivilegeRepositoryTest {
 
     @Test
     public void removingPrivilegeShouldNotRemoveRole(){
-        // TODO
     }
 }

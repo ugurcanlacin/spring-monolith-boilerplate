@@ -1,7 +1,9 @@
 package com.monolith.boilerplate;
 
 import com.monolith.boilerplate.model.*;
+import com.monolith.boilerplate.repository.RoleRepository;
 import com.monolith.boilerplate.repository.UserRepository;
+import com.monolith.boilerplate.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -9,10 +11,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Profile("mysql")
@@ -22,27 +23,33 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    VerificationTokenRepository verificationTokenRepository;
+
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if (alreadySetup)
             return;
-        Privilege p1 = Privilege.builder().name("P1").build();
-        Privilege p2 = Privilege.builder().name("P2").build();
-        Set<Privilege> privileges1 = new HashSet<>();
+        Permission p1 = Permission.builder().name("P1").build();
+        Permission p2 = Permission.builder().name("P2").build();
+        Set<Permission> privileges1 = new HashSet<>();
         privileges1.add(p1);
-        Set<Privilege> privileges2 = new HashSet<>();
+        Set<Permission> privileges2 = new HashSet<>();
         privileges2.add(p2);
-        Role role1 = Role.builder().name("ROLE1").privileges(privileges1).build();
-        Role role2 = Role.builder().name("ROLE2").privileges(privileges2).build();
+        Role role1 = Role.builder().name("ROLE1").permissions(privileges1).build();
+        Role role2 = Role.builder().name("ROLE2").permissions(privileges2).build();
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
-        VerificationToken token = VerificationToken.builder().token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
-        Set<VerificationToken> tokens = new HashSet<>();
-        tokens.add(token);
+        roleRepository.saveAll(roles);
+
         User user = User.builder().email("test@email.com")
                 .emailVerified(true)
                 .name("name")
@@ -50,10 +57,15 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
                 .password(passwordEncoder.encode("123"))
                 .imageUrl("url")
                 .provider(AuthProvider.app)
-                .roles(roles)
-                .verificationTokens(tokens)
+                .verificationTokens(new HashSet<>())
                 .build();
-        userRepository.save(user);
+        List<Role> rolesList = roleRepository.findAll();
+        user.setRoles(new HashSet<>(rolesList));
+        User userSaved = userRepository.save(user);
+
+        VerificationToken token = VerificationToken.builder().isVerified(false).token("token").user(user).expiresAt(LocalDateTime.now().plusDays(1)).build();
+        verificationTokenRepository.save(token);
+
         alreadySetup = true;
     }
 }

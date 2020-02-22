@@ -1,11 +1,11 @@
 package com.monolith.boilerplate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Loader;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,12 +13,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "PRIVILEGE")
+@Table(name = "PERMISSION")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Privilege implements Serializable {
+@EqualsAndHashCode(exclude = "roles")
+@ToString(exclude = {"roles"})
+public class Permission extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -29,6 +31,6 @@ public class Privilege implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Set<Role> roles  = new HashSet();;
+    @ManyToMany(mappedBy = "permissions")
+    private Set<Role> roles  = new HashSet();
 }

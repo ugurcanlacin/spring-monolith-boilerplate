@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -33,18 +34,18 @@ public class UserRepositoryTest {
 
     @BeforeEach
     private void saveTestUser() {
-        Privilege p1 = Privilege.builder().name("P1").build();
-        Privilege p2 = Privilege.builder().name("P2").build();
-        Set<Privilege> privileges1 = new HashSet<>();
-        privileges1.add(p1);
-        Set<Privilege> privileges2 = new HashSet<>();
-        privileges2.add(p2);
-        Role role1 = Role.builder().name("ROLE1").privileges(privileges1).build();
-        Role role2 = Role.builder().name("ROLE2").privileges(privileges2).build();
+        Permission p1 = Permission.builder().name("P1").build();
+        Permission p2 = Permission.builder().name("P2").build();
+        Set<Permission> permissions1 = new HashSet<>();
+        permissions1.add(p1);
+        Set<Permission> permissions2 = new HashSet<>();
+        permissions2.add(p2);
+        Role role1 = Role.builder().name("ROLE1").permissions(permissions1).build();
+        Role role2 = Role.builder().name("ROLE2").permissions(permissions2).build();
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
-        VerificationToken token = VerificationToken.builder().token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
+        VerificationToken token = VerificationToken.builder().isVerified(false).token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
         Set<VerificationToken> tokens = new HashSet<>();
         tokens.add(token);
         User user = User.builder().email("test@email.com")
@@ -57,7 +58,7 @@ public class UserRepositoryTest {
                 .roles(roles)
                 .verificationTokens(tokens)
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void shouldFindUserByName(){
+    public void shouldFindUserByEmail(){
         User user = userRepository.findByEmail("test@email.com");
         assertEquals("name", user.getName());
         assertEquals("url", user.getImageUrl());
@@ -80,21 +81,28 @@ public class UserRepositoryTest {
         assertNotNull(user.getRoles());
         assertEquals(2, user.getRoles().size());
         List<Role> roles = new ArrayList<>(user.getRoles());
-        assertEquals(1, roles.get(0).getPrivileges().size());
-        assertEquals(1, roles.get(1).getPrivileges().size());
+        assertEquals(1, roles.get(0).getPermissions().size());
+        assertEquals(1, roles.get(1).getPermissions().size());
     }
 
     @Test
     public void removingUserShouldNotRemoveRoles(){
         userRepository.deleteByEmail("test@email.com");
-        userRepository.flush();
+        User byEmail = userRepository.findByEmail("test@email.com");
+        assertNull(byEmail);
         assertEquals(2, roleRepository.count());
     }
 
     @Test
+    public void createdDateShouldNotBeNull(){
+        // TODO
+//        User user = userRepository.findByEmail("test@email.com");
+//        assertNotNull(user.getCreatedAt());
+    }
+
+    @Test
     public void removingRoleShouldNotRemoveUser(){
-        roleRepository.deleteByName("ROLE2");// TODO: it doesn't remove now.
-        roleRepository.flush();
+        // TODO
     }
 
     @Test
@@ -105,8 +113,5 @@ public class UserRepositoryTest {
     @Test
     public void removedVerificationTokenShouldBeRemovedFromUserToo(){
         // TODO
-//        VerificationToken token = verificationTokenRepository.findByToken("token");
-//        verificationTokenRepository.delete(token);
-//        assertNull(verificationTokenRepository.findByToken("token"));
     }
 }
