@@ -45,6 +45,8 @@ public class UserRepositoryTest {
         Set<Role> roles = new HashSet<>();
         roles.add(role1);
         roles.add(role2);
+        roleRepository.saveAll(roles);
+        List<Role> allRoles = roleRepository.findAll();
         VerificationToken token = VerificationToken.builder().isVerified(false).token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
         Set<VerificationToken> tokens = new HashSet<>();
         tokens.add(token);
@@ -55,7 +57,7 @@ public class UserRepositoryTest {
                 .password(passwordEncoder.encode("123"))
                 .imageUrl("url")
                 .provider(AuthProvider.app)
-                .roles(roles)
+                .roles(new HashSet<>(allRoles))
                 .verificationTokens(tokens)
                 .build();
         User savedUser = userRepository.save(user);
