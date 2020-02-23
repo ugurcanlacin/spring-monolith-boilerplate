@@ -37,7 +37,7 @@ public class TokenProvider {
 
     public String create(UserPrincipal userPrincipal) {
         String roles = userPrincipal.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.joining(ROLE_SEPARATOR));
-        Date now = new Date(); // TODO: is it better to use LocalDateTime?
+        Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
         String token = null;
         try {
