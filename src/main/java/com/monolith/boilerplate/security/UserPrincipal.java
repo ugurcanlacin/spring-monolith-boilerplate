@@ -1,5 +1,7 @@
 package com.monolith.boilerplate.security;
 
+import com.monolith.boilerplate.model.Permission;
+import com.monolith.boilerplate.model.Role;
 import com.monolith.boilerplate.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,10 +12,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -38,11 +38,22 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = Collections.
                 singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        if(user.getRoles() != null){
+            for (Role role: user.getRoles()) {
+                Set<Permission> permissions = role.getPermissions();
+                if(permissions != null){
+                    for (Permission permission:permissions) {
+                        grantedAuthorities.add(new SimpleGrantedAuthority(permission.getName()));
+                    }
+                }
+            }
+        }
         return new UserPrincipal(
                 user.getId(),
                 user.getEmail(),
                 user.getPassword(),
-                authorities
+                grantedAuthorities
         );
     }
 

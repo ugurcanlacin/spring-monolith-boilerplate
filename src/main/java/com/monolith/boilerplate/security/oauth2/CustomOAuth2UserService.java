@@ -2,7 +2,10 @@ package com.monolith.boilerplate.security.oauth2;
 
 import com.monolith.boilerplate.exception.OAuth2AuthenticationProcessingException;
 import com.monolith.boilerplate.model.AuthProvider;
+import com.monolith.boilerplate.model.Permission;
+import com.monolith.boilerplate.model.Role;
 import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.repository.RoleRepository;
 import com.monolith.boilerplate.repository.UserRepository;
 import com.monolith.boilerplate.security.UserPrincipal;
 import com.monolith.boilerplate.security.oauth2.user.OAuth2UserInfo;
@@ -17,6 +20,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -24,6 +29,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -61,13 +69,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-        User user = new User();
+        Permission permission = Permission.builder().name("ROLE_USER").build();
+        Role role = Role.builder()
+                .name("DEFAULT_ROLE")
+                .permissions(new HashSet<>(Arrays.asList(permission)))
+                .build();
+        permission.setRoles(new HashSet<>(Arrays.asList(role)));
+        roleRepository.save(role);
+        Role default_role = roleRepository.findByName("DEFAULT_ROLE");
 
+        User user = new User();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
+        user.setRoles(new HashSet<>(Arrays.asList(default_role)));
         return userRepository.save(user);
     }
 
