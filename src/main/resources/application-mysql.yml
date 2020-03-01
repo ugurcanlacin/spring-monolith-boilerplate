@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://192.168.99.100:3307/boilerplate
+    url: jdbc:mysql://localhost:3306/boilerplate
     username: root
     password: root
     driverClassName: com.mysql.cj.jdbc.Driver
