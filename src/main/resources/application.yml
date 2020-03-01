@@ -1,3 +1,6 @@
+server:
+  servlet:
+    context-path: /api
 spring:
   mail:
     host: smtp.gmail.com
