@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Profile("mysql")
+@Profile("development")
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
