@@ -1,17 +1,16 @@
 package com.monolith.boilerplate.controller;
 
+import com.monolith.boilerplate.dto.*;
 import com.monolith.boilerplate.exception.BadRequestException;
 import com.monolith.boilerplate.model.*;
-import com.monolith.boilerplate.dto.ApiResponseDTO;
-import com.monolith.boilerplate.dto.AuthorizationDTO;
-import com.monolith.boilerplate.dto.LoginDTO;
-import com.monolith.boilerplate.dto.SignUpDTO;
 import com.monolith.boilerplate.repository.RoleRepository;
 import com.monolith.boilerplate.repository.UserRepository;
 import com.monolith.boilerplate.repository.VerificationTokenRepository;
 import com.monolith.boilerplate.security.TokenProvider;
 import com.monolith.boilerplate.security.UserPrincipal;
+import com.monolith.boilerplate.service.EmailService;
 import com.monolith.boilerplate.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,11 +23,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
 
     @Autowired
@@ -46,6 +48,12 @@ public class AuthController {
     @Autowired
     private TokenProvider tokenProvider;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    VerificationTokenRepository verificationTokenRepository;
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
 
@@ -62,6 +70,33 @@ public class AuthController {
         AuthorizationDTO authorizationDTO = new AuthorizationDTO().builder().accessToken(token).build();
         return ResponseEntity.ok(authorizationDTO);
     }
+
+    @GetMapping("/verify/{token}")
+    public ResponseEntity<?> verify(@PathVariable("token") String token) {
+        VerificationToken byToken = verificationTokenRepository.findByToken(token);
+        User user = byToken.getUser();
+        if(byToken.getVerified() == true){
+            log.info("Token is already verified. Token: {}", token);
+            return (ResponseEntity<?>) ResponseEntity.badRequest();
+        }
+
+        if(user.getEmailVerified() == true){
+            log.info("Email is already verified. Email: {}", user.getEmail());
+            return (ResponseEntity<?>) ResponseEntity.badRequest();
+        }
+
+        if(byToken != null){
+            byToken.setVerified(true);
+            user.setEmailVerified(true);
+            verificationTokenRepository.save(byToken);
+            userRepository.save(user);
+            log.info("Email is verified. Email: {}", user.getEmail());
+            return ResponseEntity.ok("Email is verified.");
+        } else {
+            return (ResponseEntity<?>) ResponseEntity.notFound();
+        }
+    }
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDTO signUpDTO) {
@@ -86,11 +121,24 @@ public class AuthController {
         user.setProvider(AuthProvider.app);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(new HashSet<>(Arrays.asList(default_role)));
-        User result = userRepository.save(user);
+        user.setEmailVerified(false);
+        User savedUser = userRepository.save(user);
+
+        VerificationToken token = VerificationToken.builder().verified(false).token(UUID.randomUUID().toString()).expiresAt(LocalDateTime.now().plusDays(1)).user(user).build();
+        savedUser.getVerificationTokens().add(token);
+        userRepository.save(savedUser);
+
+        String text = String.format("Please click the link below to verify your email. \n \"http://localhost:8080/auth/verify/%s\"", token.getToken());
+        EmailDTO email_verification = EmailDTO.builder().subject("Email Verification")
+                .to(user.getEmail())
+                .text(text)
+                .receiverId(savedUser.getId())
+                .build();
+        emailService.sendEmailToQueue(email_verification);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/user/me")
-                .buildAndExpand(result.getId()).toUri();
+                .buildAndExpand(savedUser.getId()).toUri();
 
         return ResponseEntity.created(location)
                 .body(new ApiResponseDTO(true, "User registered successfully@"));

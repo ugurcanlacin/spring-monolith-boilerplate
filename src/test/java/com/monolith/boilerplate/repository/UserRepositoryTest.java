@@ -47,7 +47,7 @@ public class UserRepositoryTest {
         roles.add(role2);
         roleRepository.saveAll(roles);
         List<Role> allRoles = roleRepository.findAll();
-        VerificationToken token = VerificationToken.builder().isVerified(false).token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
+        VerificationToken token = VerificationToken.builder().verified(false).token("token").expiresAt(LocalDateTime.now().plusDays(1)).build();
         Set<VerificationToken> tokens = new HashSet<>();
         tokens.add(token);
         User user = User.builder().email("test@email.com")

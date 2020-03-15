@@ -22,8 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with email : " + email);
+        if (user == null || user.getEmailVerified() == false) {
+            throw new UsernameNotFoundException(String.format("User not found with email : %s", email));
         }
         return UserPrincipal.create(user);
     }
@@ -33,7 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("User", "id", id)
         );
-
         return UserPrincipal.create(user);
     }
 }

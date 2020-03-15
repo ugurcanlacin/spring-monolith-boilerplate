@@ -19,7 +19,7 @@ public class VerificationTokenRepositoryTest {
     @BeforeEach
     private void saveTestVerificationToken() {
         VerificationToken token = VerificationToken.builder()
-                .isVerified(false)
+                .verified(false)
                 .token("token")
                 .expiresAt(LocalDateTime.now().plusDays(1))
                 .build();

@@ -33,7 +33,7 @@ public class VerificationToken extends BaseEntity implements Serializable {
     private LocalDateTime expiresAt;
 
     @Column(nullable = false)
-    private Boolean isVerified;
+    private Boolean verified;
 
     @ManyToOne
     User user;

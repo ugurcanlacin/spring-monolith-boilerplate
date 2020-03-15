@@ -54,7 +54,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         User user = userRepository.findByEmail(oAuth2UserInfo.getEmail());
-        if(user != null) {
+        if(user != null && user.getEmailVerified() == true) {
             if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
                         user.getProvider() + " account. Please use your " + user.getProvider() +
@@ -83,6 +83,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setProviderId(oAuth2UserInfo.getId());
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
+        user.setEmailVerified(true);
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
         user.setRoles(new HashSet<>(Arrays.asList(default_role)));
         return userRepository.save(user);

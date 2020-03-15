@@ -16,6 +16,6 @@ public interface VerificationTokenRepository extends CrudRepository<Verification
     void deleteByToken(String token);
 
     @Modifying
-    @Query("UPDATE VerificationToken t SET t.isVerified = true WHERE t.token = :token")
+    @Query("UPDATE VerificationToken t SET t.verified = true WHERE t.token = :token")
     void verify(@Param("token") String token);
 }

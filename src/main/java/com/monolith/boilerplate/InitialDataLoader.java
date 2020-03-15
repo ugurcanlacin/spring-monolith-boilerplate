@@ -63,7 +63,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         user.setRoles(new HashSet<>(rolesList));
         User userSaved = userRepository.save(user);
 
-        VerificationToken token = VerificationToken.builder().isVerified(false).token("token").user(user).expiresAt(LocalDateTime.now().plusDays(1)).build();
+        VerificationToken token = VerificationToken.builder().verified(false).token("token").user(user).expiresAt(LocalDateTime.now().plusDays(1)).build();
         verificationTokenRepository.save(token);
 
         alreadySetup = true;
