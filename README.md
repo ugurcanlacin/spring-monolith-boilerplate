@@ -2,6 +2,7 @@
 # Spring Monolith Boilerplate
 
 [![Build Status](https://travis-ci.com/ugurcanlacin/spring-monolith-boilerplate.svg?token=RHMpRiDixWANns41hS9d&branch=master)](https://travis-ci.com/ugurcanlacin/spring-monolith-boilerplate)
+[![codecov](https://codecov.io/gh/ugurcanlacin/spring-monolith-boilerplate/branch/master/graph/badge.svg?token=XJWXHG9W2M)](https://codecov.io/gh/ugurcanlacin/spring-monolith-boilerplate)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Security
