@@ -1,4 +1,4 @@
-# spring-monolith-boilerplate
+# Spring Monolith Boilerplate
 
 ## Security
 - Facebook, Gmail Login
