@@ -1,4 +1,7 @@
 # Spring Monolith Boilerplate
+<p align="center">
+    <img src="./spring-monolith-boilerplate.png" height="180">
+</p>
 [![Build Status](https://travis-ci.com/ugurcanlacin/spring-monolith-boilerplate.svg?token=RHMpRiDixWANns41hS9d&branch=master)](https://travis-ci.com/ugurcanlacin/spring-monolith-boilerplate)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ## Security
