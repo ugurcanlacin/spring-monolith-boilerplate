@@ -140,13 +140,6 @@
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<excludes>
-						<!-- Exclude full package from test coverage -->
-						<exclude>**/*com/monolith/boilerplate/config/**</exclude>
-						<exclude>**/*com/monolith/boilerplate/dto/**</exclude>
-					</excludes>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
