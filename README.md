@@ -1,6 +1,3 @@
-<p align="center">
-    <img src="./spring-monolith-boilerplate.png" height="180">
-</p>
 
 # Spring Monolith Boilerplate
 
