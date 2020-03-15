@@ -1,5 +1,5 @@
 # Spring Monolith Boilerplate
-
+[![Build Status](https://travis-ci.com/ugurcanlacin/spring-monolith-boilerplate.svg?token=RHMpRiDixWANns41hS9d&branch=master)](https://travis-ci.com/ugurcanlacin/spring-monolith-boilerplate)
 ## Security
 - Facebook, Gmail Login
 - JWT Login
