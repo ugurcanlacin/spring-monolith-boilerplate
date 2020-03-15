@@ -1,6 +1,7 @@
 package com.monolith.boilerplate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Loader;
@@ -32,5 +33,6 @@ public class Permission extends BaseEntity implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "permissions")
+    @JsonManagedReference
     private Set<Role> roles  = new HashSet();
 }

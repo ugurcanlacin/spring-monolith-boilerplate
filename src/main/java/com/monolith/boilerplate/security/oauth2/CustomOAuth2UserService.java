@@ -75,8 +75,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .permissions(new HashSet<>(Arrays.asList(permission)))
                 .build();
         permission.setRoles(new HashSet<>(Arrays.asList(role)));
-        roleRepository.save(role);
-        Role default_role = roleRepository.findByName("DEFAULT_ROLE");
+        Role defaultRole = roleRepository.findByName("DEFAULT_ROLE");
+        if(defaultRole == null){
+            roleRepository.save(role);
+        }
+        defaultRole = roleRepository.findByName("DEFAULT_ROLE");
 
         User user = new User();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
@@ -85,7 +88,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setEmailVerified(true);
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        user.setRoles(new HashSet<>(Arrays.asList(default_role)));
+        user.setRoles(new HashSet<>(Arrays.asList(defaultRole)));
         return userRepository.save(user);
     }
 
