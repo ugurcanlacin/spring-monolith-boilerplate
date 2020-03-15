@@ -14,7 +14,4 @@ addons:
   sonarcloud:
     organization: "faccec8e-66fb-11ea-bc55-0242ac130003"
     token:
-      secure: "**************************" # encrypted value of your token
-env:
-  global:
-    secure: CFCQnVtnqKLNTGmQuC5kw2YvhuYos/Zou4OHDLDnMuf/KEBfOinDfGe+ptxfcPEwzCj/d1U2ZLX0i8SW5t3lUfcDqQEd12t0/4oSJN+IH84AbZjafsbZ0oFyFcmvbZl0cukgVtPiZpvzWf6Gdqzm1fgeCx0DEAgl2AmAixntndZSNs9exMGMOp4lY/LzfEJTbcAf2KZU2B7DH5M7PW04jGURWT3uVmIMkkIDllKZo2QC+d+LrPO16OfuwrV9zmTLSjZPc86FYgfaKQ4KBjUzqGtiWX1szS8ooeBcf63Sm8Hjc7/+3C5PfSzMPYplYAuXwTak7lgSfEAVlKzznXsziq7rXgbkOu5gvQoEzEDirXH+MmOZqhUDhwFm+YW08sx36WADn/9SVcJUahtCdy+9OogSHuutR/HQjMNe2/2nCTPpyeUEN6Qebd+wxUJLMaCTNqGSDBl2Kx4N+OE2QnKLa7bubjGwmJVDgu+YUlAFiMf64+4O1z5SBChDgxYiAz+ZATouzEIamVhk1uzToFarCNrKHH/yjeSaoVfPLjKBZTikby3Of5/Uc/Tj4+kfbGs5IESnA1sBWOgDrpoqBxdPh4wBsBe6ndYFo/Yo2gocljdVXrOt9XQsXTSRdqSt7yWjuaQCbW8nKrsiIAnkAuXnIAh1+2ykgJOz57GS+0C5ftk=
+      secure: "ce8511jgZwK7v3OXx9952X8bhK4xP86Sa2sFJSHJ/wsGfIx9W9kx4uXEJfZFwLL9rPYKieOOT3bYisNFQtrE4OxbQdGbjh7b/EEl59ZLUsfVIX8AOAscOv5wNaX8uhxHTJAggIdSZKf2N7vEDXLY099kn5QCkUIHGCDJ8y//x9/JYRh/FGmMjxSHJMAgTo6BqHI1d1R2tSE4ZAIEBEMiOVOXPW0209duUjFRzMHnR7I/gIYiv8K2ubSULA0B18gYQ+ajOG9NLq1yxK372QW09QpZ7WEtND7tmxsevr1gyk0yScEIHvNYXbeopCJVj0KanQVPusrlwjkcfUcPcadoftpuzaqyf3Gw3ERJSQRB9ut1T6ey6Q5o0VGhL+ALGWv019xfJhFlI+WDSjGr2vQFe4xqDEnYlxyfo6IIbrlM/xyWQT2yodOzhcF6BlKfRVRaOItUP4L5HNoL5IYlwx8MRYXGhkypWluiaymkB/m+i77qRoVKRJmAVuBP9e9gJoEeYvnvIE8eBEQJQD68UJOg1wownCAMH2cLFDYTeeMxdwCudBvWmUrSzayU2hEIaKAmVXHmq+ZCP8dz0sYGPw9/v67TNADXWmryUVzt8ljWNyzFr3YuFJ49Mzc1jSmWMmKrmiClKFPn/W697V/A6k6jxHlQ0HeTUZ2wIdVHnQ1Xnk4="
