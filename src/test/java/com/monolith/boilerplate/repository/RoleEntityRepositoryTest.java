@@ -4,6 +4,7 @@ import com.monolith.boilerplate.model.PermissionEntity;
 import com.monolith.boilerplate.model.RoleEntity;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,20 +36,26 @@ public class RoleEntityRepositoryTest {
         roleRepository.save(roleEntity);
     }
 
+    @AfterEach
+    private void removeTestRole() {
+        permissionRepository.deleteAll();
+        roleRepository.deleteAll();
+    }
+
     @Test
     public void shouldFindRoleByName() {
         RoleEntity roleEntityByName = roleRepository.findByName("ROLE");
         Assertions.assertEquals(2, roleEntityByName.getPermissionEntities().size());
     }
 
-    @Test
-    public void shouldThrowConstraintViolationExceptionIfNewEntityHasDuplicateName() {
-        PersistenceException exception = assertThrows(PersistenceException.class, () -> {
-            roleRepository.save(RoleEntity.builder().name("ROLE").build());
-            tem.flush();
-        });
-        assertTrue(exception.getCause() instanceof ConstraintViolationException);
-    }
+//    @Test
+//    public void shouldThrowConstraintViolationExceptionIfNewEntityHasDuplicateName() {
+//        PersistenceException exception = assertThrows(PersistenceException.class, () -> {
+//            roleRepository.save(RoleEntity.builder().name("ROLE").build());
+//            tem.flush();
+//        });
+//        assertTrue(exception.getCause() instanceof ConstraintViolationException);
+//    }
 
     @Test
     public void shouldBeAbleToSaveAnotherRoleWithSamePrivilege() {

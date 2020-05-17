@@ -2,6 +2,7 @@ package com.monolith.boilerplate.repository;
 
 import com.monolith.boilerplate.model.*;
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserEntityRepositoryTest {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    PermissionRepository permissionRepository;
 
     @Autowired
     VerificationTokenRepository verificationTokenRepository;
@@ -61,6 +65,14 @@ public class UserEntityRepositoryTest {
                 .verificationTokenEntities(tokens)
                 .build();
         UserEntity savedUser = userRepository.save(user);
+    }
+
+    @AfterEach
+    private void removeTestUser() {
+        userRepository.deleteAll();
+        permissionRepository.deleteAll();
+        roleRepository.deleteAll();
+        verificationTokenRepository.deleteAll();
     }
 
     @Test
