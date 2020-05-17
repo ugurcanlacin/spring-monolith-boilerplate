@@ -88,12 +88,14 @@ public class UserEntityRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void removingUserShouldNotRemoveRoles(){
         userRepository.deleteByEmail("test@email.com");
         UserEntity byEmail = userRepository.findByEmail("test@email.com");
         assertNull(byEmail);
-        assertEquals(2, roleRepository.count());
+        RoleEntity role1 = roleRepository.findByName("ROLE1");
+        assertNotNull(role1);
+        RoleEntity role2 = roleRepository.findByName("ROLE2");
+        assertNotNull(role2);
     }
 
     @Test

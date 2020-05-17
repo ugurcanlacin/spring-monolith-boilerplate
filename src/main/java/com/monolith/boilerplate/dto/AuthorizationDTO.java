@@ -10,5 +10,4 @@ import lombok.*;
 @AllArgsConstructor
 public class AuthorizationDTO {
     private String accessToken;
-    private String tokenType = "Bearer";
 }

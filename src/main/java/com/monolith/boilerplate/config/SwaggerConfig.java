@@ -23,7 +23,7 @@ import static java.util.Collections.singletonList;
 public class SwaggerConfig {
     @Bean
     public Docket api() {
-        final String swaggerToken = "default_token";
+        final String swaggerToken = "";
         return  new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.monolith.boilerplate.controller"))

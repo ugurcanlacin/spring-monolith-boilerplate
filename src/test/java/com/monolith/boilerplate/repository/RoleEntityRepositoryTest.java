@@ -66,7 +66,6 @@ public class RoleEntityRepositoryTest {
     }
 
     @Test
-    @Ignore
     public void removingRoleShouldNotRemovePrivileges(){
         roleRepository.deleteByName("ROLE");
         roleRepository.flush();
