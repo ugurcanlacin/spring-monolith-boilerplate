@@ -83,8 +83,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         TextEntity hello_text = TextEntity.builder().textKey("hello_text").build();
         TextEntity textEntity = textRepository.save(hello_text);
 
-        TranslationEntity helloTranslation = TranslationEntity.builder().translation("Hello").locale(localeEn).textEntity(textEntity).build();
-        TranslationEntity hejTranslation = TranslationEntity.builder().translation("Hej").locale(localeSv).textEntity(textEntity).build();
+        TranslationEntity helloTranslation = TranslationEntity.builder().text("Hello").locale(localeEn).textEntity(textEntity).build();
+        TranslationEntity hejTranslation = TranslationEntity.builder().text("Hej").locale(localeSv).textEntity(textEntity).build();
         Set<TranslationEntity> translationEntities = new HashSet<>();
         translationEntities.add(helloTranslation);
         translationEntities.add(hejTranslation);
