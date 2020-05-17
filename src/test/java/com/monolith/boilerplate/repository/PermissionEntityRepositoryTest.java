@@ -1,7 +1,7 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.Permission;
-import com.monolith.boilerplate.model.Role;
+import com.monolith.boilerplate.model.PermissionEntity;
+import com.monolith.boilerplate.model.RoleEntity;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,12 +11,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.PersistenceException;
 import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class PermissionRepositoryTest {
+public class PermissionEntityRepositoryTest {
     @Autowired
     TestEntityManager tem;
     @Autowired
@@ -27,19 +26,19 @@ public class PermissionRepositoryTest {
 
     @BeforeEach
     private void saveTestPrivilege() {
-        Permission p1 = Permission.builder().name("WRITE_ORGANIZATION_A").build();
-        Permission p2 = Permission.builder().name("READ_ORGANIZATION_A").build();
-        HashSet<Permission> permissions = new HashSet<>();
+        PermissionEntity p1 = PermissionEntity.builder().name("WRITE_ORGANIZATION_A").build();
+        PermissionEntity p2 = PermissionEntity.builder().name("READ_ORGANIZATION_A").build();
+        HashSet<PermissionEntity> permissions = new HashSet<>();
         permissions.add(p1);
         permissions.add(p2);
-        Role role = Role.builder().name("ROLE").permissions(permissions).build();
-        roleRepository.save(role);
+        RoleEntity roleEntity = RoleEntity.builder().name("ROLE").permissionEntities(permissions).build();
+        roleRepository.save(roleEntity);
     }
 
     @Test
     public void shouldThrowConstraintViolationExceptionIfNewEntityHasDuplicateName() {
         PersistenceException exception = assertThrows(PersistenceException.class, () -> {
-            permissionRepository.save(Permission.builder().name("WRITE_ORGANIZATION_A").build());
+            permissionRepository.save(PermissionEntity.builder().name("WRITE_ORGANIZATION_A").build());
             tem.flush();
         });
         assertTrue(exception.getCause() instanceof ConstraintViolationException);

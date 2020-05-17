@@ -9,7 +9,6 @@ import com.monolith.boilerplate.repository.VerificationTokenRepository;
 import com.monolith.boilerplate.security.TokenProvider;
 import com.monolith.boilerplate.security.UserPrincipal;
 import com.monolith.boilerplate.service.EmailService;
-import com.monolith.boilerplate.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,8 +72,8 @@ public class AuthController {
 
     @GetMapping("/verify/{token}")
     public ResponseEntity<?> verify(@PathVariable("token") String token) {
-        VerificationToken byToken = verificationTokenRepository.findByToken(token);
-        User user = byToken.getUser();
+        VerificationTokenEntity byToken = verificationTokenRepository.findByToken(token);
+        UserEntity user = byToken.getUserEntity();
         if(byToken.getVerified() == true){
             log.info("Token is already verified. Token: {}", token);
             return (ResponseEntity<?>) ResponseEntity.badRequest();
@@ -104,28 +103,28 @@ public class AuthController {
             throw new BadRequestException("Email address already in use.");
         }
 
-        Permission permission = Permission.builder().name("ROLE_USER").build();
-        Role role = Role.builder()
+        PermissionEntity permission = PermissionEntity.builder().name("ROLE_USER").build();
+        RoleEntity roleEntity = RoleEntity.builder()
                 .name("DEFAULT_ROLE")
-                .permissions(new HashSet<>(Arrays.asList(permission)))
+                .permissionEntities(new HashSet<>(Arrays.asList(permission)))
                 .build();
-        permission.setRoles(new HashSet<>(Arrays.asList(role)));
-        roleRepository.save(role);
-        Role default_role = roleRepository.findByName("DEFAULT_ROLE");
+        permission.setRoleEntities(new HashSet<>(Arrays.asList(roleEntity)));
+        roleRepository.save(roleEntity);
+        RoleEntity default_roleEntity = roleRepository.findByName("DEFAULT_ROLE");
 
         // Creating user's account
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setName(signUpDTO.getName());
         user.setEmail(signUpDTO.getEmail());
         user.setPassword(signUpDTO.getPassword());
         user.setProvider(AuthProvider.app);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(Arrays.asList(default_role)));
+        user.setRoleEntities(new HashSet<>(Arrays.asList(default_roleEntity)));
         user.setEmailVerified(false);
-        User savedUser = userRepository.save(user);
+        UserEntity savedUser = userRepository.save(user);
 
-        VerificationToken token = VerificationToken.builder().verified(false).token(UUID.randomUUID().toString()).expiresAt(LocalDateTime.now().plusDays(1)).user(user).build();
-        savedUser.getVerificationTokens().add(token);
+        VerificationTokenEntity token = VerificationTokenEntity.builder().verified(false).token(UUID.randomUUID().toString()).expiresAt(LocalDateTime.now().plusDays(1)).userEntity(user).build();
+        savedUser.getVerificationTokenEntities().add(token);
         userRepository.save(savedUser);
 
         String text = String.format("Please click the link below to verify your email. \n \"http://localhost:8080/auth/verify/%s\"", token.getToken());

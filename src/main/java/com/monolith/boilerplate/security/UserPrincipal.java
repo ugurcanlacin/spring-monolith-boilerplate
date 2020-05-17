@@ -1,8 +1,8 @@
 package com.monolith.boilerplate.security;
 
-import com.monolith.boilerplate.model.Permission;
-import com.monolith.boilerplate.model.Role;
-import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.model.PermissionEntity;
+import com.monolith.boilerplate.model.RoleEntity;
+import com.monolith.boilerplate.model.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -35,15 +34,15 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserPrincipal create(User user) {
+    public static UserPrincipal create(UserEntity user) {
         List<GrantedAuthority> authorities = Collections.
                 singletonList(new SimpleGrantedAuthority("ROLE_USER"));
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if(user.getRoles() != null){
-            for (Role role: user.getRoles()) {
-                Set<Permission> permissions = role.getPermissions();
+        if(user.getRoleEntities() != null){
+            for (RoleEntity roleEntity : user.getRoleEntities()) {
+                Set<PermissionEntity> permissions = roleEntity.getPermissionEntities();
                 if(permissions != null){
-                    for (Permission permission:permissions) {
+                    for (PermissionEntity permission:permissions) {
                         grantedAuthorities.add(new SimpleGrantedAuthority(permission.getName()));
                     }
                 }
@@ -57,7 +56,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         );
     }
 
-    public static UserPrincipal create(User user, Map<String, Object> attributes) {
+    public static UserPrincipal create(UserEntity user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userPrincipal.setAttributes(attributes);
         return userPrincipal;

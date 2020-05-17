@@ -2,14 +2,10 @@ package com.monolith.boilerplate.model;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Loader;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "VERIFICATION_TOKEN")
@@ -17,9 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"user"})
-@EqualsAndHashCode(exclude = "user")
-public class VerificationToken extends BaseEntity implements Serializable {
+@ToString(exclude = {"userEntity"})
+@EqualsAndHashCode(exclude = "userEntity")
+public class VerificationTokenEntity extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -36,5 +32,5 @@ public class VerificationToken extends BaseEntity implements Serializable {
     private Boolean verified;
 
     @ManyToOne
-    User user;
+    UserEntity userEntity;
 }

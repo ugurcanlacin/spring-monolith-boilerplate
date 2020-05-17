@@ -1,6 +1,6 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.VerificationToken;
+import com.monolith.boilerplate.model.VerificationTokenEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-public class VerificationTokenRepositoryTest {
+public class VerificationTokenEntityRepositoryTest {
     @Autowired
     VerificationTokenRepository verificationTokenRepository;
 
     @BeforeEach
     private void saveTestVerificationToken() {
-        VerificationToken token = VerificationToken.builder()
+        VerificationTokenEntity token = VerificationTokenEntity.builder()
                 .verified(false)
                 .token("token")
                 .expiresAt(LocalDateTime.now().plusDays(1))
@@ -28,7 +28,7 @@ public class VerificationTokenRepositoryTest {
 
     @Test
     public void shouldFindByToken(){
-        VerificationToken token = verificationTokenRepository.findByToken("token");
+        VerificationTokenEntity token = verificationTokenRepository.findByToken("token");
         assertNotNull(token);
         assertEquals(1, verificationTokenRepository.count());
     }

@@ -1,7 +1,7 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.Permission;
-import com.monolith.boilerplate.model.Role;
+import com.monolith.boilerplate.model.PermissionEntity;
+import com.monolith.boilerplate.model.RoleEntity;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class RoleRepositoryTest {
+public class RoleEntityRepositoryTest {
     @Autowired
     RoleRepository roleRepository;
     @Autowired
@@ -27,23 +27,23 @@ public class RoleRepositoryTest {
 
     @BeforeEach
     private void saveTestRole() {
-        Set<Permission> permissions = new HashSet<>();
-        permissions.add(Permission.builder().name("WRITE_ORGANIZATION_A").build());
-        permissions.add(Permission.builder().name("READ_ORGANIZATION_A").build());
-        Role role = Role.builder().name("ROLE").permissions(permissions).build();
-        roleRepository.save(role);
+        Set<PermissionEntity> permissions = new HashSet<>();
+        permissions.add(PermissionEntity.builder().name("WRITE_ORGANIZATION_A").build());
+        permissions.add(PermissionEntity.builder().name("READ_ORGANIZATION_A").build());
+        RoleEntity roleEntity = RoleEntity.builder().name("ROLE").permissionEntities(permissions).build();
+        roleRepository.save(roleEntity);
     }
 
     @Test
     public void shouldFindRoleByName() {
-        Role roleByName = roleRepository.findByName("ROLE");
-        Assertions.assertEquals(2, roleByName.getPermissions().size());
+        RoleEntity roleEntityByName = roleRepository.findByName("ROLE");
+        Assertions.assertEquals(2, roleEntityByName.getPermissionEntities().size());
     }
 
     @Test
     public void shouldThrowConstraintViolationExceptionIfNewEntityHasDuplicateName() {
         PersistenceException exception = assertThrows(PersistenceException.class, () -> {
-            roleRepository.save(Role.builder().name("ROLE").build());
+            roleRepository.save(RoleEntity.builder().name("ROLE").build());
             tem.flush();
         });
         assertTrue(exception.getCause() instanceof ConstraintViolationException);
@@ -51,14 +51,14 @@ public class RoleRepositoryTest {
 
     @Test
     public void shouldBeAbleToSaveAnotherRoleWithSamePrivilege() {
-        Set<Permission> permissions = new HashSet<>();
-        Permission permission = permissionRepository.findByName("WRITE_ORGANIZATION_A");
+        Set<PermissionEntity> permissions = new HashSet<>();
+        PermissionEntity permission = permissionRepository.findByName("WRITE_ORGANIZATION_A");
         permissions.add(permission);
-        Role role = Role.builder().name("ROLE2").permissions(permissions).build();
-        roleRepository.save(role);
-        Role role2 = roleRepository.findByName("ROLE2");
-        Set<Permission> permissionsSets= role2.getPermissions();
-        assertNotNull(role2);
+        RoleEntity roleEntity = RoleEntity.builder().name("ROLE2").permissionEntities(permissions).build();
+        roleRepository.save(roleEntity);
+        RoleEntity roleEntity2 = roleRepository.findByName("ROLE2");
+        Set<PermissionEntity> permissionsSets= roleEntity2.getPermissionEntities();
+        assertNotNull(roleEntity2);
         assertNotNull(permissionsSets);
         assertEquals(1, permissionsSets.size());
         assertEquals("WRITE_ORGANIZATION_A", permissionsSets.iterator().next().getName());

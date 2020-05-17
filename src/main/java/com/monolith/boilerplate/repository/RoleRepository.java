@@ -1,6 +1,6 @@
 package com.monolith.boilerplate.repository;
 
-import com.monolith.boilerplate.model.Role;
+import com.monolith.boilerplate.model.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, String> {
-    Role findByName(String name);
+public interface RoleRepository extends JpaRepository<RoleEntity, String> {
+    RoleEntity findByName(String name);
     void deleteByName(String name);
 
     @Modifying

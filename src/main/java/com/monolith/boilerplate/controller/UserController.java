@@ -1,7 +1,7 @@
 package com.monolith.boilerplate.controller;
 
 import com.monolith.boilerplate.exception.ResourceNotFoundException;
-import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.model.UserEntity;
 import com.monolith.boilerplate.repository.UserRepository;
 import com.monolith.boilerplate.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class UserController {
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public UserEntity getCurrentUserEntity(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         return userRepository.findById(userPrincipal.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }

@@ -2,9 +2,9 @@ package com.monolith.boilerplate.security.oauth2;
 
 import com.monolith.boilerplate.exception.OAuth2AuthenticationProcessingException;
 import com.monolith.boilerplate.model.AuthProvider;
-import com.monolith.boilerplate.model.Permission;
-import com.monolith.boilerplate.model.Role;
-import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.model.PermissionEntity;
+import com.monolith.boilerplate.model.RoleEntity;
+import com.monolith.boilerplate.model.UserEntity;
 import com.monolith.boilerplate.repository.RoleRepository;
 import com.monolith.boilerplate.repository.UserRepository;
 import com.monolith.boilerplate.security.UserPrincipal;
@@ -22,7 +22,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -53,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        User user = userRepository.findByEmail(oAuth2UserInfo.getEmail());
+        UserEntity user = userRepository.findByEmail(oAuth2UserInfo.getEmail());
         if(user != null && user.getEmailVerified() == true) {
             if(!user.getProvider().equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
                 throw new OAuth2AuthenticationProcessingException("Looks like you're signed up with " +
@@ -68,31 +67,31 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return UserPrincipal.create(user, oAuth2User.getAttributes());
     }
 
-    private User registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
-        Permission permission = Permission.builder().name("ROLE_USER").build();
-        Role role = Role.builder()
+    private UserEntity registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserInfo) {
+        PermissionEntity permission = PermissionEntity.builder().name("ROLE_USER").build();
+        RoleEntity roleEntity = RoleEntity.builder()
                 .name("DEFAULT_ROLE")
-                .permissions(new HashSet<>(Arrays.asList(permission)))
+                .permissionEntities(new HashSet<>(Arrays.asList(permission)))
                 .build();
-        permission.setRoles(new HashSet<>(Arrays.asList(role)));
-        Role defaultRole = roleRepository.findByName("DEFAULT_ROLE");
-        if(defaultRole == null){
-            roleRepository.save(role);
+        permission.setRoleEntities(new HashSet<>(Arrays.asList(roleEntity)));
+        RoleEntity defaultRoleEntity = roleRepository.findByName("DEFAULT_ROLE");
+        if(defaultRoleEntity == null){
+            roleRepository.save(roleEntity);
         }
-        defaultRole = roleRepository.findByName("DEFAULT_ROLE");
+        defaultRoleEntity = roleRepository.findByName("DEFAULT_ROLE");
 
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setEmailVerified(true);
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        user.setRoles(new HashSet<>(Arrays.asList(defaultRole)));
+        user.setRoleEntities(new HashSet<>(Arrays.asList(defaultRoleEntity)));
         return userRepository.save(user);
     }
 
-    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
+    private UserEntity updateExistingUser(UserEntity existingUser, OAuth2UserInfo oAuth2UserInfo) {
         existingUser.setName(oAuth2UserInfo.getName());
         existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
         return userRepository.save(existingUser);

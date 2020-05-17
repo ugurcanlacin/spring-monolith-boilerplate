@@ -1,6 +1,6 @@
 package com.monolith.boilerplate.service;
 
-import com.monolith.boilerplate.model.Permission;
+import com.monolith.boilerplate.model.PermissionEntity;
 import com.monolith.boilerplate.repository.PermissionRepository;
 import com.monolith.boilerplate.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class PermissionService {
 
     @Transactional
     public void deletePermissionByName(String name){
-        Permission permission = permissionRepository.findByName(name);
+        PermissionEntity permission = permissionRepository.findByName(name);
         roleRepository.deleteAllRelationshipInRolesPermissionsByPermissionId(permission.getId());
         permissionRepository.deleteByName(permission.getName());
     }

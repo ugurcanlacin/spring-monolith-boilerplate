@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role extends BaseEntity implements Serializable {
+public class RoleEntity extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -33,6 +33,6 @@ public class Role extends BaseEntity implements Serializable {
     @JoinTable(name = "roles_permissions",
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id"))
-    private Set<Permission> permissions;
+    private Set<PermissionEntity> permissionEntities;
 
 }

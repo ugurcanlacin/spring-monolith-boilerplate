@@ -2,7 +2,7 @@ package com.monolith.boilerplate.security;
 
 
 import com.monolith.boilerplate.exception.ResourceNotFoundException;
-import com.monolith.boilerplate.model.User;
+import com.monolith.boilerplate.model.UserEntity;
 import com.monolith.boilerplate.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
+        UserEntity user = userRepository.findByEmail(email);
         if (user == null || user.getEmailVerified() == false) {
             throw new UsernameNotFoundException(String.format("User not found with email : %s", email));
         }
@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserById(String id) {
-        User user = userRepository.findById(id).orElseThrow(
+        UserEntity user = userRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("User", "id", id)
         );
         return UserPrincipal.create(user);

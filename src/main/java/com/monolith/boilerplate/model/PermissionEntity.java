@@ -1,12 +1,8 @@
 package com.monolith.boilerplate.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Loader;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,9 +15,9 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "roles")
-@ToString(exclude = {"roles"})
-public class Permission extends BaseEntity implements Serializable {
+@EqualsAndHashCode(exclude = "roleEntities")
+@ToString(exclude = {"roleEntities"})
+public class PermissionEntity extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -32,7 +28,7 @@ public class Permission extends BaseEntity implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "permissions")
+    @ManyToMany(mappedBy = "permissionEntities")
     @JsonManagedReference
-    private Set<Role> roles  = new HashSet();
+    private Set<RoleEntity> roleEntities = new HashSet();
 }

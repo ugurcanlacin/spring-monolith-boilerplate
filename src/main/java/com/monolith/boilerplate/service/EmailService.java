@@ -1,7 +1,7 @@
 package com.monolith.boilerplate.service;
 
 import com.monolith.boilerplate.dto.EmailDTO;
-import com.monolith.boilerplate.model.CommunicationLog;
+import com.monolith.boilerplate.model.CommunicationLogEntity;
 import com.monolith.boilerplate.repository.CommunicationLogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class EmailService {
             message.setText(email.getText());
             emailSender.send(message);
             log.info("Email is sent. EmailDTO: {}", email);
-            CommunicationLog communicationLog = CommunicationLog.builder().communicationType("Email").messageType("Verification").receiverId(email.getReceiverId()).message(email.getText()).build();
-            communicationLogRepository.save(communicationLog);
+            CommunicationLogEntity communicationLogEntity = CommunicationLogEntity.builder().communicationType("Email").messageType("Verification").receiverId(email.getReceiverId()).message(email.getText()).build();
+            communicationLogRepository.save(communicationLogEntity);
         } catch (Exception ex){
             log.error("Email sending is failed. EmailDTO: {}", email);
         }

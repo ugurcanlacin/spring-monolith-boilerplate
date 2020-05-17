@@ -10,24 +10,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "COMMUNICATION_LOG")
+@Table(name = "LOCALE")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommunicationLog extends BaseEntity implements Serializable {
+public class LocaleEntity extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(columnDefinition = "VARCHAR(50)")
     private String id;
-
-    private String communicationType;
-
-    private String messageType;
-
-    private String receiverId;
-
-    private String message;
-
+    private String language;
+    private String country;
 }
