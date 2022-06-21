@@ -19,7 +19,7 @@
 		<h2.version>1.4.200</h2.version>
 		<lombok.version>1.18.10</lombok.version>
 		<jwt.version>3.9.0</jwt.version>
-		<mysql.version>8.0.19</mysql.version>
+		<mysql.version>8.0.28</mysql.version>
 		<sonar.exclusions>**/*DTO.java, **/*Exception.java</sonar.exclusions>
 	</properties>
 
